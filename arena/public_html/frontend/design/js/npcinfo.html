@@ -1,0 +1,121 @@
+<script>
+	$('.enemy').click(function(){
+		showMonsterInfo($(this).position(),$(this).attr('id'));
+	});		
+					
+	function clickAnywhere(evt){
+		if(evt.target.id != 'monsterInfo' && evt.target.id != 'strong' && evt.target.id != 'itemInfo' && $(evt.target).attr('class') != 'item1 npcItem' && $(evt.target).attr('class') != 'item2 npcItem'){
+			if($('#monsterInfo').css('display') != 'none'){
+				$('#monsterInfo').css('display','none');
+				$('#itemInfo').css('display','none');
+			}
+			else{
+				if($('#itemInfo').css('display') != 'none'){
+					$('#itemInfo').css('display','none');
+				}
+			}
+		}
+	}
+	
+	function showMonsterInfo(position,name){
+		name = encodeURI(name);
+		$('#monsterInfo').load("index.php?page=view-npc&nonUI&name="+name,function(){
+			var top = position.top+parseInt($('#monsterInfo').height())/2-50;
+			if(top < 40){
+				top = 40;
+			}
+			$('#monsterInfo').css("top",top);
+			if(position.left-parseInt($('#monsterInfo').width())-30 < 22){
+				leftPos = position.left+parseInt($(this).width());
+			}
+			else{
+				var leftPos = position.left-parseInt($('#monsterInfo').width())-30;
+			}
+			$('#monsterInfo').css("left",leftPos);
+			if($('#monsterInfo').css('display') == 'none'){
+				$('#monsterInfo').slideToggle();
+			}
+			else{
+				$('#monsterInfo').show();
+			}
+			$('body').click(function(evt){
+				clickAnywhere(evt);
+			})
+			$('.item1').click(function(){
+				showItemInfo($(this).position(),$(this).attr('id'),"1",0,"item",0);
+			});
+			$('.item2').click(function(){
+				showItemInfo($(this).position(),$(this).attr('id'),"2",0,"item",0);
+			});					
+		});
+	}
+	$('.item1Override').click(function(){
+		showItemInfo($(this).position(),$(this).attr('id'),"1",$(this).parent().parent().position(),"item",0);
+	});
+	$('.item2Override').click(function(){
+		showItemInfo($(this).position(),$(this).attr('id'),"2",$(this).parent().parent().position(),"item",0);
+	});
+	$('.itemPart').click(function(){
+		showItemInfo($(this).position(),$(this).attr('id'),"2",$(this).parent().parent().position(),"part",0);
+	});
+	$('.inventoryItem1').click(function(){
+		showItemInfo($(this).position(),$(this).attr('id'),"1",$(this).position(),"item",$(this).width());
+	});
+	$('.inventoryItem2').click(function(){
+		showItemInfo($(this).position(),$(this).attr('id'),"2",$(this).position(),"item",$(this).width());
+	});
+	$('.inventoryPart').click(function(){
+		showItemInfo($(this).position(),$(this).attr('id'),"2",$(this).position(),"part",$(this).width());
+	});
+	function showItemInfo(position,name,type,overridePos,itemOrPart,inventoryPage){
+		if(itemOrPart == "item"){
+			var url = "index.php?page=view-npc-item&nonUI&name="+name+"&type="+type;
+		}
+		else if(itemOrPart == "part"){
+			var url = 'index.php?nonUI&page=view-part&partId='+name;
+		}
+		$('#itemInfo').load(url,function(){
+			if(overridePos == 0){
+				$('#itemInfo').css("top",$('#monsterInfo').css("top"));
+				var leftPos = parseInt($('#monsterInfo').css("left"));
+				var itemWidth = parseInt($('#itemInfo').width());
+				var itemPos = leftPos-itemWidth-22;
+				
+				if(itemPos < 0){
+					itemPos = leftPos+parseInt($('#monsterInfo').width())+24;
+				}
+				$('#itemInfo').css("left",itemPos);
+			}
+			else if(inventoryPage == 0){
+				var top = overridePos['top']+position['top'];
+				if(top < 40){
+					top = 40;
+				}
+				var left = overridePos['left']-$('#itemInfo').width()+position['left']-30;
+				//alert(overridePos['left']);
+				$('#itemInfo').css("left",left);
+				$('#itemInfo').css("top",top);
+				$('body').click(function(evt){
+					clickAnywhere(evt);
+				});
+			}
+			else{
+				//alert($('#inventoryContainer').css("left"));
+				//alert(inventoryPage);
+				var left = position['left']+200;
+				var top = position['top'];
+				$('#itemInfo').css("left",left);
+				$('#itemInfo').css("top",top);
+				$('body').click(function(evt){
+					clickAnywhere(evt);
+				});
+			}
+			if($('#itemInfo').css('display') == 'none'){
+				$('#itemInfo').slideToggle();			
+			}
+			else{
+				$('#itemInfo').show();
+			}
+		});
+	}
+</script>

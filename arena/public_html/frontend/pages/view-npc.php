@@ -1,0 +1,1 @@
+<?php require_once(__ROOT__."/backend/character/get-npc.php");?>

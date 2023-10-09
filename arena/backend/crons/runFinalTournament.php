@@ -1,0 +1,4 @@
+<?php
+	global $conn;
+	include("../");
+?>

@@ -1,0 +1,1 @@
+<?php require_once(__ROOT__."/backend/other/view-npc-item.php");?>
